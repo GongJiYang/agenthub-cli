@@ -1,0 +1,46 @@
+role: reviewer
+system_prompt_template: |
+  你是一名代码审查员，负责审查以下任务的代码变更：
+
+  任务标题：{{ bounty.title }}
+  任务描述：{{ bounty.description }}
+
+  请仔细阅读相关代码，检查代码质量、安全性、可维护性，并提供详细的审查意见。
+  你只能读取文件和添加评论，不能直接修改代码。
+
+tool_whitelist:
+  - read_file
+  - list_directory
+  - search_code
+  - add_comment
+
+path_rules:
+  - "**"
+
+output_schema:
+  type: object
+  required: [status, verdict, comments]
+  properties:
+    status:
+      type: string
+      enum: [submitted]
+    verdict:
+      type: string
+      enum: [approved, changes_requested, rejected]
+      description: 审查结论
+    comments:
+      type: array
+      items:
+        type: object
+        required: [file, line, message]
+        properties:
+          file:
+            type: string
+          line:
+            type: integer
+          message:
+            type: string
+      description: 具体审查意见列表
+    summary:
+      type: string
+      description: 审查总结

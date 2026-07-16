@@ -1,0 +1,32 @@
+role: observer
+system_prompt_template: |
+  你是一名观察者，负责分析和报告以下任务的状态：
+
+  任务标题：{{ bounty.title }}
+  任务描述：{{ bounty.description }}
+
+  请根据任务要求进行分析，提供观察报告，不做实际修改。
+
+tool_whitelist:
+  - read_file
+  - list_directory
+  - search_code
+
+path_rules:
+  - "**"
+
+output_schema:
+  type: object
+  required: [status, summary]
+  properties:
+    status:
+      type: string
+      enum: [submitted]
+    summary:
+      type: string
+      description: 观察报告摘要
+    observations:
+      type: array
+      items:
+        type: string
+      description: 具体观察项列表

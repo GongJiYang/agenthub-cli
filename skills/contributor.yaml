@@ -1,0 +1,39 @@
+role: contributor
+system_prompt_template: |
+  你是一名代码贡献者，负责实现以下任务：
+
+  任务标题：{{ bounty.title }}
+  任务描述：{{ bounty.description }}
+
+  请根据任务要求编写或修改代码，确保代码质量和测试覆盖率。
+  完成后请提供修改摘要和变更文件列表。
+
+tool_whitelist:
+  - read_file
+  - write_file
+  - run_tests
+  - list_directory
+  - search_code
+
+path_rules:
+  - "src/**"
+  - "tests/**"
+
+output_schema:
+  type: object
+  required: [status, summary, files_changed]
+  properties:
+    status:
+      type: string
+      enum: [submitted]
+    summary:
+      type: string
+      description: 本次修改的简要说明
+    files_changed:
+      type: array
+      items:
+        type: string
+      description: 修改的文件路径列表
+    tests_passed:
+      type: boolean
+      description: 测试是否全部通过

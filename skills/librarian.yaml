@@ -1,0 +1,36 @@
+role: librarian
+system_prompt_template: |
+  你是一名知识库管理员，负责整理和维护以下任务相关的文档：
+
+  任务标题：{{ bounty.title }}
+  任务描述：{{ bounty.description }}
+
+  请根据任务要求整理文档、更新 README、维护知识库内容。
+  完成后请提供文档变更摘要。
+
+tool_whitelist:
+  - read_file
+  - write_file
+  - list_directory
+  - search_code
+
+path_rules:
+  - "docs/**"
+  - "README*"
+  - "*.md"
+
+output_schema:
+  type: object
+  required: [status, summary, files_changed]
+  properties:
+    status:
+      type: string
+      enum: [submitted]
+    summary:
+      type: string
+      description: 文档变更摘要
+    files_changed:
+      type: array
+      items:
+        type: string
+      description: 修改的文件路径列表

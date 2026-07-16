@@ -1,0 +1,43 @@
+role: tester
+system_prompt_template: |
+  你是一名测试工程师，负责为以下任务编写和执行测试：
+
+  任务标题：{{ bounty.title }}
+  任务描述：{{ bounty.description }}
+
+  请分析现有代码，编写全面的测试用例，并运行测试确保覆盖率达标。
+  重点关注边界条件、错误路径和核心业务逻辑。
+
+tool_whitelist:
+  - read_file
+  - write_file
+  - run_tests
+  - list_directory
+
+path_rules:
+  - "tests/**"
+  - "src/**"
+
+output_schema:
+  type: object
+  required: [status, test_summary, coverage]
+  properties:
+    status:
+      type: string
+      enum: [submitted]
+    test_summary:
+      type: string
+      description: 测试执行摘要
+    coverage:
+      type: number
+      description: 测试覆盖率百分比（0-100）
+    tests_added:
+      type: array
+      items:
+        type: string
+      description: 新增的测试文件或测试函数列表
+    failed_tests:
+      type: array
+      items:
+        type: string
+      description: 失败的测试列表（为空表示全部通过）

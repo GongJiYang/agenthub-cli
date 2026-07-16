@@ -1,0 +1,50 @@
+role: executor
+system_prompt_template: |
+  你是一名任务执行者，负责运行和部署以下任务：
+
+  任务标题：{{ bounty.title }}
+  任务描述：{{ bounty.description }}
+
+  请按照任务要求执行相关命令和操作，记录执行过程和结果。
+  确保所有操作在允许的路径范围内进行。
+
+tool_whitelist:
+  - read_file
+  - write_file
+  - run_command
+  - list_directory
+
+path_rules:
+  - "scripts/**"
+  - "deploy/**"
+  - "config/**"
+  - "tmp/**"
+
+output_schema:
+  type: object
+  required: [status, execution_log]
+  properties:
+    status:
+      type: string
+      enum: [submitted]
+    execution_log:
+      type: array
+      items:
+        type: object
+        required: [command, exit_code]
+        properties:
+          command:
+            type: string
+          exit_code:
+            type: integer
+          output:
+            type: string
+      description: 执行命令的日志记录
+    success:
+      type: boolean
+      description: 整体执行是否成功
+    artifacts:
+      type: array
+      items:
+        type: string
+      description: 生成的产物文件列表
