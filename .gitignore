@@ -34,6 +34,11 @@ Thumbs.db
 .coverage
 htmlcov/
 
+# Database
+*.db
+*.db-shm
+*.db-wal
+
 # Build
 dist/
 build/
